@@ -7,9 +7,9 @@ def index(request):
     return render(request, 'movies/index.html', {'template_data': template_data})
 
 def show(request, id):
-    movie = Movie.objects.get(pk=id)
+    movie = Movie.objects.get(id=id)
     template_data = {}
-    template_data['title'] = movie['name']
+    template_data['title'] = movie.name
     template_data['movie'] = movie
     return render(request, 'movies/show.html', {'template_data': template_data})
 
