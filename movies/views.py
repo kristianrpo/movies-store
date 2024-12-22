@@ -1,5 +1,7 @@
-from django.shortcuts import render
-from .models import Movie
+from django.shortcuts import render,redirect
+from django.contrib.auth.decorators import login_required
+from .models import Movie, Review
+
 def index(request):
     search_term = request.GET.get('search')
     if search_term:
@@ -18,4 +20,19 @@ def show(request, id):
     template_data['title'] = movie.name
     template_data['movie'] = movie
     return render(request, 'movies/show.html', {'template_data': template_data})
+
+@login_required
+def create_review(request, id):
+    if request.method == 'POST' and request.POST['comment']!= '':
+        movie = Movie.objects.get(id=id)
+        user = request.user
+        review = Review()
+        review.comment = request.POST['comment']
+        review.movie = movie
+        review.user = user
+        review.save()
+        return redirect('movies.show', id=id)
+    else:
+        return redirect('movies.show', id=id)
+
 
